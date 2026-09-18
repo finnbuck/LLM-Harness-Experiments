@@ -9,12 +9,12 @@ model = AutoModelForCausalLM.from_pretrained(model_name)
 
 
 
-text = "The brain is a"
+text = "The pythagorean theorem states that "
 response = ""
 
-print(text, end="")
+print(text, end="", flush=True)
 
-for i in range(0, 10):
+for i in range(0, 30):
     inputs = tokenizer(text, return_tensors="pt")
 
     with torch.no_grad():
@@ -25,7 +25,7 @@ for i in range(0, 10):
     next_token_id = torch.argmax(probs)        # pick the single most likely token
     next_token = tokenizer.decode(next_token_id)
     text += next_token
-    print(next_token, end="")
+    print(next_token, end="", flush=True)
 
 print("\n")
 
