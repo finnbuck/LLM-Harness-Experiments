@@ -3,16 +3,21 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[[source]]
+url = "https://download.pytorch.org/whl/cu124"
+verify_ssl = true
+name = "downloadpytorch"
+
 [packages]
 huggingface-hub = "*"
 transformers = "*"
-torch = "*"
 numpy = "*"
 sentence-transformers = "*"
 umap-learn = "*"
 matplotlib = "*"
 plotly = "*"
 pandas = "*"
+torch = {version = "*", index = "downloadpytorch"}
 
 [dev-packages]
 
