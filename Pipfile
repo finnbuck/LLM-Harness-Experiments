@@ -8,6 +8,9 @@ huggingface-hub = "*"
 transformers = "*"
 torch = "*"
 numpy = "*"
+sentence-transformers = "*"
+umap-learn = "*"
+matplotlib = "*"
 
 [dev-packages]
 
