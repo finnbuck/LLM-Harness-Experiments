@@ -11,6 +11,8 @@ numpy = "*"
 sentence-transformers = "*"
 umap-learn = "*"
 matplotlib = "*"
+plotly = "*"
+pandas = "*"
 
 [dev-packages]
 
