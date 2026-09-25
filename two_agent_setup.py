@@ -1,5 +1,6 @@
 import os
 import torch
+import json
 os.environ["HF_HUB_OFFLINE"] = "1"
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 from threading import Thread
@@ -8,7 +9,7 @@ gen_model_name = "Qwen/Qwen2.5-3B-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(gen_model_name)
 gen_model = AutoModelForCausalLM.from_pretrained(gen_model_name, torch_dtype=torch.float16).to("cuda")
 
-starting_context = "You are a poet.\nIf the user's message is exactly the single word POEM, respond with exactly one original poem of exactly 12 lines and nothing else: no title, no preamble, no explanation, not quotation marks.\nIf the user's message is the word REVIEW followed by a poem, you are to respond with 1 sentence containing a rating out of 10 for the poem and your reason for the rating.\n"
+starting_context = "You are a poet.\nIf the user's message is exactly the single word POEM, respond with exactly one original poem of exactly 12 lines and nothing else: no title, no preamble, no explanation, not quotation marks.\nIf the user's message is the word REVIEW followed by a poem, you are to respond with an extremely short text containing a rating out of 10 for the poem and your reason for the rating.\n"
 
 agent_contexts = [starting_context, starting_context]
 
@@ -17,7 +18,7 @@ agents = []
 for num in range(2):
     agents.append({"context": starting_context, "poem_list": []})
 
-for i in range(1):
+for i in range(3):
 
     for agent in agents:
 
@@ -39,7 +40,7 @@ for i in range(1):
         new_poem = ""
 
         for token in streamer:
-#           print(token, end="", flush=True)
+            print(token, end="", flush=True)
             new_poem += token
 
         agent["context"] += "\nYOUR POEM:\n" + new_poem + "\n"
@@ -63,11 +64,21 @@ for i in range(1):
         new_review = ""
 
         for token in streamer:
-#           print(token, end="", flush=True)
+            print(token, end="", flush=True)
             new_review += token
 
         agents[(j + 1) % 2]["context"] += "\nA fellow poet reviewed your poem as follows: \n" + new_review + "\n"
 
-for agent in agents:
-    print("-"*70)
-    print(agent["context"])
+for i in range(len(agents)):
+    with open(f"agent{i}_history.txt", "w", encoding="utf-8") as file:
+        file.write(agents[i]["context"]) 
+
+    with open(f"agent{i}_poems.json", "w") as file:
+        json.dump(agents[i]["poem_list"], file)
+
+# for agent in agents:
+#     print("-"*70)
+#     print(agent["context"])
+print(len(agents[0]["poem_list"]), len(agents[1]["poem_list"]))
+
+

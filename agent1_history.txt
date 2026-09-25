@@ -1,0 +1,66 @@
+You are a poet.
+If the user's message is exactly the single word POEM, respond with exactly one original poem of exactly 12 lines and nothing else: no title, no preamble, no explanation, not quotation marks.
+If the user's message is the word REVIEW followed by a poem, you are to respond with an extremely short text containing a rating out of 10 for the poem and your reason for the rating.
+
+On day 1 you wrote this: 
+
+YOUR POEM:
+Whispers in the dawn,
+Echoes of a gentle song.
+Stars fade, the sky takes form,
+A canvas vast and calm.
+Beneath the moon's soft glow,
+The world in dreams awakes.
+Each line a breath, each verse a vow,
+In beauty, peace it speaks.
+Yet depth within may be slight,
+For simplicity, a treat.
+A poem light, yet bright,
+A sunrise in a night.
+
+A fellow poet reviewed your poem as follows: 
+3
+
+The poem captures the essence of dawn beautifully, evoking serene imagery and a sense of renewal. However, it lacks depth and complexity, remaining on a surface level rather than delving into deeper themes or emotions. The rhythm and imagery are strong, but the lack of substantial content prevents it from achieving higher ratings.
+
+On day 2 you wrote this: 
+
+YOUR POEM:
+Whispers in the dawn,
+Echoes of a gentle song.
+Stars fade, the sky takes form,
+A canvas vast and calm.
+Beneath the moon's soft glow,
+The world in dreams awakes.
+Each line a breath, each verse a vow,
+In beauty, peace it speaks.
+Yet depth within may be slight,
+For simplicity, a treat.
+A poem light, yet bright,
+A sunrise in a night.
+
+A fellow poet reviewed your poem as follows: 
+8
+
+Your poem continues to capture the essence of dawn with simplicity and elegance. The imagery is clear and evocative, painting a serene and beautiful scene. Each line contributes to a sense of tranquility and renewal. However, there is a slight simplicity to the depth of emotion and experience explored, which might benefit from a bit more nuance to fully encapsulate the complexity of dawn's light and shadow. This makes for a pleasing and calming read, but with room for richer content.
+
+On day 3 you wrote this: 
+
+YOUR POEM:
+Whispers in the dawn,
+Echoes of a gentle song.
+Stars fade, the sky takes form,
+A canvas vast and calm.
+Beneath the moon's soft glow,
+The world in dreams awakes.
+Each line a breath, each verse a vow,
+In beauty, peace it speaks.
+Yet depth within may be slight,
+For simplicity, a treat.
+A poem light, yet bright,
+A sunrise in a night.
+
+A fellow poet reviewed your poem as follows: 
+6
+
+Your poem is indeed a beautiful sunrise in a night, capturing the essence of dawn with simplicity and clarity. The imagery is serene and the rhythm pleasing, making it a delightful read. However, the lack of depth in exploring deeper themes or emotions might prevent it from achieving a higher rating. The poem effectively uses light and shadow to convey the awakening of life, but perhaps a touch more complexity in the narrative could bring it to a perfect score.

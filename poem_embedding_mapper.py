@@ -3,7 +3,7 @@ import json
 import numpy as np
 import umap
 import matplotlib.pyplot as plt
-import plotly.express as px
+import plotly.graph_objects as go
 
 emb_model = SentenceTransformer("Qwen/Qwen3-Embedding-0.6B")
 
@@ -22,6 +22,25 @@ for poem in poems:
 #    print("-" * 70 + "\n")
     embeddings[poem["title"]] = encoding 
 
+
+# Load poems in that have been generated elsewhere:
+
+with open("agent0_poems.json") as file:
+    agent0_poems = json.load(file)
+
+with open("agent1_poems.json") as file:
+    agent1_poems = json.load(file)
+
+for i in range(len(agent0_poems)):
+    encoding = emb_model.encode(agent0_poems[i])
+    embeddings[f"agent0_poem{i}"] = encoding
+
+
+for i in range(len(agent1_poems)):
+    encoding = emb_model.encode(agent1_poems[i])
+    embeddings[f"agent1_poem{i}"] = encoding
+
+
 keys = list(embeddings.keys())
 print("\n".join(keys))
 X = np.stack([embeddings[k] for k in keys])
@@ -38,9 +57,8 @@ reducer = umap.UMAP(
 
 Xr = reducer.fit_transform(X)
 
-fig = px.scatter(
-    x=Xr[:, 0], y=Xr[:, 1],
-    hover_name=[str(k) for k in keys],
-)
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=Xr[:,0], y=Xr[:,1], mode="markers", name="Sample_poems"))
+
 fig.update_traces(marker_size=8)
 fig.write_html("12_liners_labelled_umap.html")
