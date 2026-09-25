@@ -4,6 +4,7 @@ import numpy as np
 import umap
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import plotly.express as px
 
 emb_model = SentenceTransformer("Qwen/Qwen3-Embedding-0.6B")
 
@@ -57,8 +58,16 @@ reducer = umap.UMAP(
 
 Xr = reducer.fit_transform(X)
 
-fig = go.Figure()
-fig.add_trace(go.Scatter(x=Xr[:,0], y=Xr[:,1], mode="markers", name="Sample_poems"))
+# fig = go.Figure()
+# fig.add_trace(go.Scatter(x=Xr[:,0], y=Xr[:,1], mode="markers", name="Sample_poems"))
+
+
+fig = go.Figure(go.Scattergl(
+    x=Xr[:, 0], y=Xr[:, 1],
+    mode="markers",
+    hovertext=[str(k) for k in keys],
+    hoverinfo="text",
+))
 
 fig.update_traces(marker_size=8)
 fig.write_html("12_liners_labelled_umap.html")
