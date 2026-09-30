@@ -18,6 +18,8 @@ matplotlib = "*"
 plotly = "*"
 pandas = "*"
 torch = {version = "*", index = "downloadpytorch"}
+accelerate = ">=1.1.0"
+bitsandbytes = "*"
 
 [dev-packages]
 

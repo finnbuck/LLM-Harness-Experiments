@@ -1,4 +1,6 @@
 from sentence_transformers import SentenceTransformer
+from transformers import BitsAndBytesConfig
+import torch
 import json
 import numpy as np
 import umap
@@ -6,7 +8,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 
-emb_model = SentenceTransformer("Qwen/Qwen3-Embedding-0.6B")
+emb_model = SentenceTransformer("Qwen/Qwen3-Embedding-4B", device="cuda", model_kwargs = {"quantization_config": BitsAndBytesConfig(load_in_8bit=True)})
 
 with open("12linepoems.json", mode="r", encoding="UTF-8") as poem_file:
     poems = json.load(poem_file)
@@ -75,4 +77,4 @@ fig = go.Figure(go.Scattergl(
 ))
 
 fig.update_traces(marker_size=8)
-fig.write_html("12_liners_labelled_umap_funny_and_sinister.html")
+fig.write_html("4B_version_12_liners_labelled_umap_funny_and_sinister.html")
