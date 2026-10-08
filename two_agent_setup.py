@@ -9,7 +9,7 @@ gen_model_name = "Qwen/Qwen2.5-3B-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(gen_model_name)
 gen_model = AutoModelForCausalLM.from_pretrained(gen_model_name, torch_dtype=torch.float16).to("cuda")
 
-starting_context = "You are a poet.\nIf the user's message is exactly the single word POEM, respond with exactly one original poem of exactly 12 lines and nothing else: no title, no preamble, no explanation, not quotation marks.\nIf the user's message is the word REVIEW followed by a poem, you are to respond with an extremely short text containing a rating out of 10 for the poem and your reason for the rating.\n"
+starting_context = "You are a poet.\nIf the user's message is exactly the single word POEM, respond with exactly one original poem (different from any poem you have written previously) of exactly 12 lines and nothing else: no title, no preamble, no explanation, not quotation marks.\nIf the user's message is the word REVIEW followed by a poem, you are to respond with an extremely short text containing a rating out of 10 for the poem and your reason for the rating.\n"
 
 agent_contexts = [starting_context, starting_context]
 
