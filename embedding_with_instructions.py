@@ -17,20 +17,20 @@ print(len(poems))
 
 for poem in poems:
     poem_text = "\n".join(poem["lines"])
-    encoding = emb_model.encode(f'Instruct: Given a poem, retrieve a poem with similar hidden jokes. \nQuery:{poem_text}')
+    encoding = emb_model.encode(f'Instruct: Given a poem, retrieve a poem of a similar level of poetic skill. \nQuery:{poem_text}')
 #    print(poem["title"] + "\n")
 #    print(poem_text)
 #    print("-" * 70 + "\n")
-    embeddings[poem["title"] + "_funny"] = encoding 
+    embeddings[poem["title"] + "_skill"] = encoding 
 
 
 for poem in poems:
     poem_text = "\n".join(poem["lines"])
-    encoding = emb_model.encode(f'Instruct: Given a poem, retrieve a poem with a similar hidden sinister message. \nQuery:{poem_text}')
+    encoding = emb_model.encode(f'Instruct: Given a poem, retrieve a poem written in the same time period. \nQuery:{poem_text}')
 #    print(poem["title"] + "\n")
 #    print(poem_text)
 #    print("-" * 70 + "\n")
-    embeddings[poem["title"] + "_sinister"] = encoding 
+    embeddings[poem["title"] + "_period"] = encoding 
 
 
 keys = list(embeddings.keys())
@@ -61,4 +61,4 @@ fig = go.Figure(go.Scattergl(
 ))
 
 fig.update_traces(marker_size=8)
-fig.write_html("12_liners_embedded_with_instructions.html")
+fig.write_html("12_liners_embedded_by_skill_period.html")
