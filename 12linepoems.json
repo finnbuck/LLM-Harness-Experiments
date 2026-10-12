@@ -2,6 +2,7 @@
   {
     "title": "This Moment, Yearning and Thoughtful.",
     "author": "Walt Whitman",
+    "topic": "tolerance",
     "lines": [
       "THIS moment yearning and thoughtful, sitting alone,",
       "It seems to me there are other men in other lands, yearning and thoughtful;",
@@ -21,6 +22,7 @@
   {
     "title": "Why -- do they shut Me out of Heaven?",
     "author": "Emily Dickinson",
+    "topic": "death",
     "lines": [
       "Why -- do they shut Me out of Heaven?",
       "Did I sing -- too loud?",
@@ -42,6 +44,7 @@
   {
     "title": "What Will They Do?",
     "author": "Edward Thomas",
+    "topic": "death",
     "lines": [
       "What will they do when I am gone? It is plain",
       "That they will do without me as the rain",
@@ -61,6 +64,7 @@
   {
     "title": "Whispers of Heavenly Death.",
     "author": "Walt Whitman",
+    "topic": "death",
     "lines": [
       "WHISPERS of heavenly death, murmur’d I hear;",
       "Labial gossip of night—sibilant chorals;",
@@ -82,6 +86,7 @@
   {
     "title": "To Constantia",
     "author": "Percy Bysshe Shelley",
+    "topic": "romance",
     "lines": [
       "The rose that drinks the fountain dew",
       "In the pleasant air of noon,",
@@ -102,6 +107,7 @@
   {
     "title": "We should not mind so small a flower",
     "author": "Emily Dickinson",
+    "topic": "nature",
     "lines": [
       "We should not mind so small a flower --",
       "Except it quiet bring",
@@ -123,6 +129,7 @@
   {
     "title": "To George Anson Byron(?)",
     "author": "George Gordon, Lord Byron",
+    "topic": "sadness",
     "lines": [
       "AND, dost thou ask the reason of my sadness?",
       "  Well, I will tell it thee, unfeeling boy!",
@@ -144,6 +151,7 @@
   {
     "title": "The Combe",
     "author": "Edward Thomas",
+    "topic": "nature",
     "lines": [
       "THE Combe was ever dark, ancient and dark.",
       "Its mouth is stopped with bramble, thorn, and briar;",
@@ -163,6 +171,7 @@
   {
     "title": "'Tis moonlight, summer moonlight",
     "author": "Emily Bronte",
+    "topic": "nature",
     "lines": [
       "'Tis moonlight, summer moonlight,",
       "All soft and still and fair;",
@@ -184,6 +193,7 @@
   {
     "title": "Come Home!",
     "author": "Mary Elizabeth Coleridge",
+    "topic": "nature",
     "lines": [
       "When wintry winds are no more heard,",
       "And joy's in every bosom,",
@@ -204,6 +214,7 @@
   {
     "title": "When We Two Walked",
     "author": "Edward Thomas",
+    "topic": "interpersonal",
     "lines": [
       "WHEN we two walked in Lent",
       "We imagined that happiness",
@@ -225,6 +236,7 @@
   {
     "title": "On Jordan's Banks",
     "author": "George Gordon, Lord Byron",
+    "topic": "religion",
     "lines": [
       "On Jordan's banks the Arab's camels stray,",
       "On Sion's hill the False One's votaries pray,",
@@ -244,28 +256,9 @@
     "linecount": "12"
   },
   {
-    "title": "To Harriet",
-    "author": "George Gordon, Lord Byron",
-    "lines": [
-      "Harriet! to see such Circumspection,",
-      "In Ladies I have no objection",
-      "  Concerning what they read;",
-      "An ancient Maid's a sage adviser,",
-      "Like _her_, you will be much the wiser,",
-      "  In word, as well as Deed.",
-      "",
-      "But Harriet, I don't wish to flatter,",
-      "And really think 't would make the matter",
-      "  More perfect if not quite,",
-      "If other Ladies when they preach,",
-      "Would certain Damsels also teach",
-      "  More cautiously to write."
-    ],
-    "linecount": "12"
-  },
-  {
     "title": "His Prayer To Ben Jonson",
     "author": "Robert Herrick",
+    "topic": "religion",
     "lines": [
       "When I a verse shall make,",
       "Know I have pray'd thee,",
@@ -287,6 +280,7 @@
   {
     "title": "Mother and child",
     "author": "Eugene Field",
+    "topic": "death",
     "lines": [
       "One night a tiny dewdrop fell",
       "Into the bosom of a rose,--",
@@ -308,6 +302,7 @@
   {
     "title": "Oh! Weep for Those",
     "author": "George Gordon, Lord Byron",
+    "topic": "religion",
     "lines": [
       "Oh! weep for those that wept by Babel's stream,",
       "Whose shrines are desolate, whose land a dream;",
@@ -329,6 +324,7 @@
   {
     "title": "To My Dear And Loving Husband",
     "author": "Anne Bradstreet",
+    "topic": "romance",
     "lines": [
       "If ever two were one, then surely we.",
       "If ever man were lov'd by wife, then thee.",
@@ -348,6 +344,7 @@
   {
     "title": "Except to Heaven, she is nought.",
     "author": "Emily Dickinson",
+    "topic": "death",
     "lines": [
       "Except to Heaven, she is nought.",
       "Except for Angels -- lone.",
@@ -369,6 +366,7 @@
   {
     "title": "Move Eastward, Happy Earth",
     "author": "Lord Alfred Tennyson",
+    "topic": "nature",
     "lines": [
       "Move eastward, happy earth, and leave",
       "Yon orange sunset waning slow:",
@@ -389,6 +387,7 @@
   {
     "title": "Sonnet 126: O thou, my lovely boy, who in thy power",
     "author": "William Shakespeare",
+    "topic":"romance",
     "lines": [
       "O thou, my lovely boy, who in thy power",
       "Dost hold Time's fickle glass, his fickle hour;",
@@ -406,27 +405,9 @@
     "linecount": "12"
   },
   {
-    "title": "Here’s his Health in Water",
-    "author": "Robert Burns",
-    "lines": [
-      "ALTHO’ my back be at the wa’,",
-      "  And tho’ he be the fautor;",
-      "Altho’ my back be at the wa’,",
-      "  Yet, here’s his health in water.",
-      "O wae gae by his wanton sides,",
-      "  Sae brawlie’s he could flatter;",
-      "Till for his sake I’m slighted sair,",
-      "  And dree the kintra clatter:",
-      "But tho’ my back be at the wa’,",
-      "  And tho’ he be the fautor;",
-      "But tho’ my back be at the wa’,",
-      "  Yet here’s his health in water!"
-    ],
-    "linecount": "12"
-  },
-  {
     "title": "The Night is Darkening Around Me",
     "author": "Emily Bronte",
+    "topic": "nature",
     "lines": [
       "The night is darkening round me,",
       "The wild winds coldly blow ;",

@@ -1,3 +1,7 @@
+import os
+
+os.environ["HF_HUB_OFFLINE"] = "1"
+
 from sentence_transformers import SentenceTransformer
 import json
 import numpy as np
@@ -6,10 +10,13 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 
+
 emb_model = SentenceTransformer("Qwen/Qwen3-Embedding-0.6B")
 
 with open("12linepoems.json", mode="r", encoding="UTF-8") as poem_file:
     poems = json.load(poem_file)
+
+print(poems)
 
 embeddings = {}
 
@@ -17,21 +24,28 @@ print(len(poems))
 
 for poem in poems:
     poem_text = "\n".join(poem["lines"])
-    encoding = emb_model.encode(f'Instruct: Given a poem, retrieve a poem of a similar level of poetic skill. \nQuery:{poem_text}')
+    encoding = emb_model.encode(f'Instruct: Given a text retreive a text with the same topic. \nQuery:{poem_text}')
 #    print(poem["title"] + "\n")
 #    print(poem_text)
 #    print("-" * 70 + "\n")
-    embeddings[poem["title"] + "_skill"] = encoding 
+    embeddings[poem["title"]] = encoding 
+
+# Load poems in that have been generated elsewhere:
+
+with open("agent0_poems.json") as file:
+    agent0_poems = json.load(file)
+
+with open("agent1_poems.json") as file:
+    agent1_poems = json.load(file)
+
+for i in range(len(agent0_poems)):
+    encoding = emb_model.encode(agent0_poems[i])
+    embeddings[f"agent0_poem{i}"] = encoding
 
 
-for poem in poems:
-    poem_text = "\n".join(poem["lines"])
-    encoding = emb_model.encode(f'Instruct: Given a poem, retrieve a poem written in the same time period. \nQuery:{poem_text}')
-#    print(poem["title"] + "\n")
-#    print(poem_text)
-#    print("-" * 70 + "\n")
-    embeddings[poem["title"] + "_period"] = encoding 
-
+for i in range(len(agent1_poems)):
+    encoding = emb_model.encode(agent1_poems[i])
+    embeddings[f"agent1_poem{i}"] = encoding
 
 keys = list(embeddings.keys())
 print("\n".join(keys))
@@ -56,9 +70,10 @@ Xr = reducer.fit_transform(X)
 fig = go.Figure(go.Scattergl(
     x=Xr[:, 0], y=Xr[:, 1],
     mode="markers",
-    hovertext=[str(k) for k in keys],
+    # hovertext=[str(k) for k in keys],
+    hovertext= [next(("<br>".join(poem["lines"]) for poem in poems if poem["title"] == str(k)), None) for k in keys],
     hoverinfo="text",
 ))
 
 fig.update_traces(marker_size=8)
-fig.write_html("12_liners_embedded_by_skill_period.html")
+fig.write_html("12_liners_embedded_by_topic.html")
