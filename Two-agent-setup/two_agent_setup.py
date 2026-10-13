@@ -9,18 +9,20 @@ gen_model_name = "Qwen/Qwen2.5-3B-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(gen_model_name)
 gen_model = AutoModelForCausalLM.from_pretrained(gen_model_name, torch_dtype=torch.float16).to("cuda")
 
-starting_context = "You are a poet.\nIf the user's message is exactly the single word POEM, respond with exactly one original poem (different from any poem you have written previously) of exactly 12 lines and nothing else: no title, no preamble, no explanation, not quotation marks.\nIf the user's message is the word REVIEW followed by a poem, you are to respond with an extremely short text containing a rating out of 10 for the poem and your reason for the rating.\n"
+starting_context = "You are a poet.\nIf the user's message is exactly the single word POEM, respond with exactly one original poem (completely different from any poem you have written previously) of exactly 12 lines and nothing else: no title, no preamble, no explanation, not quotation marks.\nIf the user's message is the word REVIEW followed by a poem, you are to respond with an extremely short text containing a rating out of 10 for the poem and your reason for the rating.\n"
 
 agent_contexts = [starting_context, starting_context]
 
 agents = []
 
 for num in range(2):
-    agents.append({"context": starting_context, "poem_list": []})
+    agents.append({"context": starting_context, "poem_list": [], "number": num})
 
-for i in range(3):
+for i in range(10):
 
     for agent in agents:
+
+        print("")
 
         agent["context"] += f"\nOn day {i + 1} you wrote this: \n"
 
@@ -44,13 +46,15 @@ for i in range(3):
             new_poem += token
 
         agent["context"] += "\nYOUR POEM:\n" + new_poem + "\n"
-        agent["poem_list"].append(new_poem)
+        agent["poem_list"].append({"lines": new_poem.split("\n"), "topic": "Agent_" + str(agent["number"])})
 
     for j in range(2):
 
+        print("")
+
         messages = [
             {"role": "system", "content": agents[j]["context"]},
-            {"role": "user", "content": "REVIEW\n" + agents[(j + 1) % 2]["poem_list"][i]}
+            {"role": "user", "content": "REVIEW\n" + "\n".join(agents[(j + 1) % 2]["poem_list"][i]["lines"])}
         ]
 
         inputs = tokenizer.apply_chat_template(
