@@ -123,7 +123,7 @@ for topic in topics:
     fig.add_trace(go.Scatter3d(
         x=[Xr[:, 0][i] for i in topic_i], y=[Xr[:, 1][i] for i in topic_i], z=[Xr[:, 2][i] for i in topic_i],
         mode="markers",
-        marker=dict(color=colors[color_count], size=6),
+        marker=dict(color=colors[color_count], size=3),
         # hovertext=[str(k) for k in keys],
         hovertext= [html_format_poems[i] for i in topic_i],
         hoverinfo="text",
@@ -134,9 +134,9 @@ for topic in topics:
 for agent in agent_list:
     agent_i = [i for i in range(len(embeddings)) if poems[i]["topic"] == agent]
     fig.add_trace(go.Scatter3d(
-        x=[Xr[:, 0][i] for i in agent_i], y=[Xr[:, 1][i] for i in agent_i], z=[Xr[:, 1][i] for i in agent_i],
+        x=[Xr[:, 0][i] for i in agent_i], y=[Xr[:, 1][i] for i in agent_i], z=[Xr[:, 2][i] for i in agent_i],
         mode="lines+markers",
-        marker=dict(color=colors[color_count], size=8),
+        marker=dict(color=colors[color_count], size=4),
         line=dict(color=colors[color_count]),
         # hovertext=[str(k) for k in keys],
         hovertext= [html_format_poems[i] for i in agent_i],
