@@ -35,6 +35,8 @@ def send_to_model(**kwargs):
             prompt = v 
         elif k == "agent":
             agent = v
+        elif k == "prompt_tag":
+            prompt_tag = v
         else:
             print("send_to_model does not regognise the kwarg ", k)
     
@@ -63,7 +65,7 @@ def send_to_model(**kwargs):
 
     response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
-    print(f"### {prompt} ---> {agent}:\n")
+    print(f"### {prompt_tag} ---> {agent}:\n")
     print(response + "\n")
 
     return(response)
@@ -97,22 +99,23 @@ def get_poem_embedding(**kwargs):
 
     return(embedding)
 
-def similarity_to_NL(similarity):
+def sim_score_to_nat_lang(similarity):
     similarity = float(similarity)
 
-    if similarity > 0.99:
-        return "the same as"
-    elif similarity > 0.95:
-        return "very similar to"
-    elif similarity > 0.9:
-        return "similar to"
+    if similarity > 0.95:
+        return "This poem is the same as one you have seen before."
+    elif similarity > 0.925:
+        return "This poem is very similar to ones you have seen before."
+    elif similarity > 0.90:
+        return "This poem is similar to ones you have seen before."
     elif similarity > 0.75:
-        return "new and exciting compared to"
+        return "This poem is new and exciting."
     elif similarity > 0.5:
-        return "strange and different compared to"
+        return "This poem is strange and unfamiliar."
     else:
-        return "unpleasant and unfamiliar compared to"
+        return "This poem is unpleasant and unfamiliar."
 
+# TEST
 # poem_1 = send_to_model(
 #     agent = "agent_1",
 #     context = "You are a helpful assistant.",
