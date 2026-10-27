@@ -32,9 +32,7 @@ def make_instruction_prompt(task_description):
 # Tested at 15:41 and 15:43 Oct 13:
 # Big difference on some poems, but it does not meaningfully improve its seperation of these categories. That's not that surprising though.
 
-instruction_prompt = make_instruction_prompt("Given a poem return a poem from the same category. The 10 categories are: Love & Courtship; " +
-    "Death & Mourning; Nature & the Seasons; War, Politics & Patriotism; Satire & Social Commentary; Philosophical Reflection; Childhood & Family; " +
-    "Memory, Loss & Nostalgia; Melancholy & the Inner Life; Myth, Legend & the Supernatural.")
+instruction_prompt = make_instruction_prompt("Given a poem return a poem with the same topic.")
 
 # Get the poems
 
@@ -61,6 +59,7 @@ print("Embeddings type", type(embeddings), embeddings.shape) # Result: Embedding
 # Test to see if the order of embeddings gets changed
 # The similarity is 0.999 or greater for each one so we can be sure the order was not changed between just_lines and embeddings
 # They are not perfectly similar because of padding added to the texts when embeddings are done in batches.
+# The aboce note on padding is based on a Claude response CHECK IT INDEPENDENTLY.
 # TEST SUCCESSFUL, can trust ordering.
 # for i in range(30):
 #     test_indice = random.randint(0, 400)
