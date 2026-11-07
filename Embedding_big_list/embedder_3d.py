@@ -37,17 +37,19 @@ instruction_prompt = make_instruction_prompt("Given a poem return a poem with th
 # Get the poems
 
 with open("4-16_line_poems_with_topics.json", mode="r", encoding="UTF-8") as poem_file:
-    poems = json.load(poem_file)
+    dataset_poems = json.load(poem_file)
 
 with open("single_agent_test_runs/agent_0_poems_Nov-07-16:26.json") as file:
     agent0_poems = json.load(file)
 
-poems += agent0_poems 
+poems = dataset_poems + agent0_poems 
 
 for poem in poems:
     print(poem)
 
-just_lines = ["\n".join(poem["lines"]) for poem in poems]
+just_lines = ["\n".join(poem["lines"]) for poem in dataset_poems]
+
+just_lines += [poem["lines"] for poem in agent0_poems]
 
 embeddings = model.encode(just_lines, prompt=instruction_prompt)
 
