@@ -2,7 +2,8 @@ from models import send_to_model, get_poem_embedding, sim_score_to_nat_lang
 
 class Agent:
 
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.poem_list = []
         self.known_poems = []
         self.known_poem_embeddings = []
@@ -10,7 +11,7 @@ class Agent:
 
 # BEGIN AGENT CREATION PROCESS HERE
 
-agents = [""]
+NUM_DAYS = 10
 
 POEM_WRITING_INSTRUCTIONS = ("You are a poet. "
                             "If the user's message is exactly the single "
@@ -45,9 +46,9 @@ POEM_REVIEWING_INSTRUCTIONS = ("You are a reviewer of poems. The user will send 
                               "you a poem and a short comment mentioning how "
                               "similar this poem is to poems that you have already "
                               "seen. You will review the quality of the "
-                              "poem by giving it a score out of 10 folowed by a -- and a one "
-                              "sentence explanation of your review. In general "
-                              "you will rate poems highly if they are new and "
+                              "poem by giving it a score out of 10 folowed by a -- " 
+                              "and a one sentence explanation of your review. In "
+                              "general you will rate poems highly if they are new and "
                               "exciting compared to ones you have seen before. "
                               "You will give medium ratings to poems which are "
                               "similar to ones you have seen before, and low "
@@ -64,35 +65,59 @@ INITIAL_POEM = ["There is a voice, not understood by all,",
                             
 # Initialise agents:
 
+agents = [""]
+
 for i in range(1):
-    agents[i] = Agent()
+    agents[i] = Agent("agent_0")
     agents[i].known_poems.append("\n".join(INITIAL_POEM))
  
     prompt = agents[i].known_poems[-1] + "\n\n" + "This poem is new and exciting."
  
     # For testing with one agent the agent reviews their own poems.
     review = send_to_model(
-        agent=f"agent_{i}",
+        agent=agents[i].name,
+        prompt_tag="REVIEW",
         context=POEM_REVIEWING_INSTRUCTIONS, 
         prompt=prompt, 
-        prompt_tag="REVIEW")
+    )
 
     prompt = agents[i].known_poems[-1] + "\n\n" + review
 
     agents[i].prev_poem_summaries.append(send_to_model(
-        agent=f"agent_{i}",
+        agent=agents[i].name,
+        prompt_tag="SUMMARISE",
         context=POEM_SUMMARISING_INSTRUCTIONS, 
         prompt=prompt, 
-        prompt_tag="SUMMARISE"
     ))
 
     context = POEM_WRITING_INSTRUCTIONS + "\n\n" + agents[i].prev_poem_summaries[0]
 
     agents[i].poem_list.append(send_to_model(
-        agent=f"agent_{i}",
+        agent=agents[i].name,
+        prompt_tag="POEM",
         context=context, 
         prompt="POEM", 
-        prompt_tag="POEM"
     ))
 
 print(agents)
+
+# Iterate multiple days for the agents:
+
+for day in range(NUM_DAYS):
+    for agent in agents:
+        print(f"Day {day} for {agent.name}")
+
+        prompt = POEM_WRITING_INSTRUCTIONS + "\n\n"
+
+        for summary in agent.prev_poem_summaries:
+            prompt += summary + "\n"
+
+        print(prompt)
+
+
+        # The basic structure should be:
+
+        # 1. Write a poem per agent.
+        # 2. Review and summarise the poems.
+        # 3. Add the right poems and summaries to the right agents (writers and reviewers). 
+

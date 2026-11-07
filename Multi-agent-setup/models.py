@@ -14,7 +14,7 @@ gen_model = AutoModelForCausalLM.from_pretrained(
     gen_model_name,
     dtype=torch.float16, # Decided to set manually for more transparancy.
 ).to("cuda") # Likewise decided to explicitly move process to GPU. 
-             # It will fail if no GPU available.
+             # It will fail if no GPU is available.
 
 tokenizer = AutoTokenizer.from_pretrained(gen_model_name)
 
@@ -92,7 +92,7 @@ def get_poem_embedding(**kwargs):
             print("embed_poem does not regognise the kwarg ", k)
     
     embedding_instruction_prompt = make_instruction_prompt(
-        "Given a poem return a poem with the same topic."
+        "Given a poem, return a poem with the same topic."
     )
 
     embedding = embedding_model.encode(poem, prompt=embedding_instruction_prompt)
@@ -115,31 +115,33 @@ def sim_score_to_nat_lang(similarity):
     else:
         return "This poem is unpleasant and unfamiliar."
 
-# TEST
-# poem_1 = send_to_model(
-#     agent = "agent_1",
-#     context = "You are a helpful assistant.",
-#     prompt = "Write a short poem."
-# )
-
-# poem_2 = send_to_model(
-#     agent = "agent_1",
-#     context = "You are a helpful assistant.",
-#     prompt = "Write a short poem."
-# )
-
-# embedding_1 = get_poem_embedding(poem = poem_1)
-# embedding_2 = get_poem_embedding(poem = poem_2)
-
-# print("Embedding_1: ", embedding_1)
-# print("Embedding_1 type: ", type(embedding_1))
-
-# print("Similarity of poem_1 to poem_1", 
-#     embedding_model.similarity(embedding_1, embedding_1)
-# )
-
-# sim_between = embedding_model.similarity(embedding_1, embedding_2)
-
-# print("Similarity of poem_1 to poem_2", sim_between)
-
-# print("Converted to number: ", similarity_to_NL(sim_between))
+## TEST
+#poem_1 = send_to_model(
+#    agent = "agent_1",
+#    context = "You are a helpful assistant.",
+#    prompt = "Write a short poem.",
+#    prompt_tag = "POEM"
+#)
+#
+#poem_2 = send_to_model(
+#    agent = "agent_1",
+#    context = "You are a helpful assistant.",
+#    prompt = "Write a short poem.",
+#    prompt_tag = "POEM"
+#)
+#
+#embedding_1 = get_poem_embedding(poem = poem_1)
+#embedding_2 = get_poem_embedding(poem = poem_2)
+#
+#print("Embedding_1: ", embedding_1)
+#print("Embedding_1 type: ", type(embedding_1))
+#
+#print("Similarity of poem_1 to poem_1", 
+#    embedding_model.similarity(embedding_1, embedding_1)
+#)
+#
+#sim_between = embedding_model.similarity(embedding_1, embedding_2)
+#
+#print("Similarity of poem_1 to poem_2", sim_between)
+#
+#print("Converted to sentence: ", sim_score_to_nat_lang(sim_between))
