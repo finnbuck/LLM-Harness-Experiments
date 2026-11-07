@@ -77,7 +77,7 @@ def send_to_model(**kwargs):
 #     prompt = "Write a short poem."
 # )
 
-# Current superfluous but keeping for later use.
+# Currently superfluous but keeping for later use.
 def make_instruction_prompt(task_description):
     return f'Instruct: {task_description}\nQuery:'
 
@@ -99,18 +99,20 @@ def get_poem_embedding(**kwargs):
 
     return(embedding)
 
-def sim_score_to_nat_lang(similarity):
-    similarity = float(similarity)
+def get_similarity(poem_1, poem_2):
+    return float(embedding_model.similarity(poem_1, poem_2))
 
-    if similarity > 0.95:
+# Similarity score to natural language
+def sim_to_nat_lang(similarity):
+    if similarity > 0.97:
         return "This poem is the same as one you have seen before."
-    elif similarity > 0.925:
+    elif similarity > 0.95:
         return "This poem is very similar to ones you have seen before."
     elif similarity > 0.90:
         return "This poem is similar to ones you have seen before."
-    elif similarity > 0.75:
+    elif similarity > 0.85:
         return "This poem is new and exciting."
-    elif similarity > 0.5:
+    elif similarity > 0.75:
         return "This poem is strange and unfamiliar."
     else:
         return "This poem is unpleasant and unfamiliar."

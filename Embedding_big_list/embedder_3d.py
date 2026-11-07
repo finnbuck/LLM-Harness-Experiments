@@ -39,13 +39,10 @@ instruction_prompt = make_instruction_prompt("Given a poem return a poem with th
 with open("4-16_line_poems_with_topics.json", mode="r", encoding="UTF-8") as poem_file:
     poems = json.load(poem_file)
 
-with open("agent0_poems.json") as file:
+with open("single_agent_test_runs/agent_0_poems_Nov-07-16:26.json") as file:
     agent0_poems = json.load(file)
 
-with open("agent1_poems.json") as file:
-    agent1_poems = json.load(file)
-
-poems += agent0_poems + agent1_poems
+poems += agent0_poems 
 
 for poem in poems:
     print(poem)

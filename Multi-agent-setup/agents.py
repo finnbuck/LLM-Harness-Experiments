@@ -1,4 +1,6 @@
-from models import send_to_model, get_poem_embedding, sim_score_to_nat_lang
+from models import send_to_model, get_poem_embedding, get_similarity, sim_to_nat_lang
+import datetime
+import json
 
 class Agent:
 
@@ -7,11 +9,19 @@ class Agent:
         self.poem_list = []
         self.known_poems = []
         self.known_poem_embeddings = []
-        self.prev_poem_summaries = []
+        self.known_poem_summaries = []
+
+    def export_format(self):
+        export = []
+        for poem in self.poem_list:
+            export.append(
+                    {"lines": poem,
+                     "topic": self.name
+                    })
+
+        return export
 
 # BEGIN AGENT CREATION PROCESS HERE
-
-NUM_DAYS = 10
 
 POEM_WRITING_INSTRUCTIONS = ("You are a poet. "
                             "If the user's message is exactly the single "
@@ -57,67 +67,126 @@ POEM_REVIEWING_INSTRUCTIONS = ("You are a reviewer of poems. The user will send 
                               "have seen before. An example review could be: "
                               "**3/10 -- this poem is strange and unfamiliar. ")
 
-INITIAL_POEM = ["There is a voice, not understood by all,",
-               "Sent from these desert-caves. It is the roar",
-               "Of the rent ice-cliff which the sunbeams call,",
-               "Plunging into the vale--it is the blast",
-               "Descending on the pines--the torrents pour..."]
+INITIAL_POEM = ("There is a voice, not understood by all,\n"
+               "Sent from these desert-caves. It is the roar\n"
+               "Of the rent ice-cliff which the sunbeams call,\n"
+               "Plunging into the vale--it is the blast\n"
+               "Descending on the pines--the torrents pour...")
                             
 # Initialise agents:
 
-agents = [""]
+agent_agacency_matrix_TEST = [[0, 1],
+                            [1, 0]]
 
-for i in range(1):
-    agents[i] = Agent("agent_0")
-    agents[i].known_poems.append("\n".join(INITIAL_POEM))
- 
-    prompt = agents[i].known_poems[-1] + "\n\n" + "This poem is new and exciting."
- 
-    # For testing with one agent the agent reviews their own poems.
-    review = send_to_model(
-        agent=agents[i].name,
-        prompt_tag="REVIEW",
-        context=POEM_REVIEWING_INSTRUCTIONS, 
-        prompt=prompt, 
-    )
+agent_agacency_matrix = [[0, 1, 0],
+                         [0, 0, 1],
+                         [1, 0, 0]]
 
-    prompt = agents[i].known_poems[-1] + "\n\n" + review
+#agents = [0] * len(agent_agacency_matrix)
 
-    agents[i].prev_poem_summaries.append(send_to_model(
-        agent=agents[i].name,
-        prompt_tag="SUMMARISE",
-        context=POEM_SUMMARISING_INSTRUCTIONS, 
-        prompt=prompt, 
-    ))
+#for i in range(len(agents)):
+#    agents[i] = Agent(f"agent_{i}")
 
-    context = POEM_WRITING_INSTRUCTIONS + "\n\n" + agents[i].prev_poem_summaries[0]
+agents = [0]
 
-    agents[i].poem_list.append(send_to_model(
-        agent=agents[i].name,
-        prompt_tag="POEM",
-        context=context, 
-        prompt="POEM", 
-    ))
+# OLD 1-Agent test version below
 
-print(agents)
+def run_single_agent_test(num_days):
 
-# Iterate multiple days for the agents:
+    for i in range(1):
+        agents[i] = Agent("agent_0")
+        agents[i].known_poems.append(INITIAL_POEM)
+        agents[i].known_poem_embeddings.append(get_poem_embedding(poem=INITIAL_POEM))
+     
+        prompt = agents[i].known_poems[-1] + "\n\n" + "This poem is new and exciting."
+     
+        # For testing with one agent the agent reviews their own poems.
+        review = send_to_model(
+            agent=agents[i].name,
+            prompt_tag="REVIEW",
+            context=POEM_REVIEWING_INSTRUCTIONS, 
+            prompt=prompt, 
+        )
+    
+        prompt = agents[i].known_poems[-1] + "\n\n" + review
+    
+        agents[i].known_poem_summaries.append(send_to_model(
+            agent=agents[i].name,
+            prompt_tag="SUMMARISE",
+            context=POEM_SUMMARISING_INSTRUCTIONS, 
+            prompt=prompt, 
+        ))
+    
+    # Iterate multiple days for the agents:
+    
+    for day in range(num_days):
+        for agent in agents:
+            print(f"Day {day} for {agent.name}: \n\n")
 
-for day in range(NUM_DAYS):
-    for agent in agents:
-        print(f"Day {day} for {agent.name}")
+            context = POEM_WRITING_INSTRUCTIONS + "\n\n"
+    
+            for summary in agent.known_poem_summaries:
+                context += summary + "\n"
+    
+            new_poem = send_to_model(
+                           agent=agent.name,
+                           prompt_tag="POEM",
+                           context=context, 
+                           prompt="POEM", 
+                       )
 
-        prompt = POEM_WRITING_INSTRUCTIONS + "\n\n"
+            new_poem_embedding = get_poem_embedding(poem=new_poem)
 
-        for summary in agent.prev_poem_summaries:
-            prompt += summary + "\n"
+            print("Context: \n", context)
 
-        print(prompt)
+            # The loop below finds the maximum similarity of the 
+            # new poem to the set of existing poems
+            similarity = 0
+            for old_embedding in agent.known_poem_embeddings:
 
+                candidate_sim = get_similarity(
+                                    new_poem_embedding, 
+                                    old_embedding
+                                )
+
+                if candidate_sim > similarity:
+                    similarity = candidate_sim
+                    print("New similarity: ", similarity)
+
+            prompt = new_poem + "\n\n" + sim_to_nat_lang(similarity)
+                
+            # For testing with one agent the agent reviews their own poems.
+            review = send_to_model(
+                agent=agent.name,
+                prompt_tag="REVIEW",
+                context=POEM_REVIEWING_INSTRUCTIONS, 
+                prompt=prompt, 
+            )
+
+            prompt = new_poem + "\n\n" + review
+    
+            agents[i].known_poem_summaries.append(send_to_model(
+                 agent=agent.name,
+                 prompt_tag="SUMMARISE",
+                 context=POEM_SUMMARISING_INSTRUCTIONS, 
+                 prompt=prompt, 
+            ))
+            
+            agent.poem_list.append(new_poem)
+            agent.known_poems.append(new_poem)
+            agent.known_poem_embeddings.append(new_poem_embedding)
+
+    x = datetime.datetime.now()
+    time_stamp = x.strftime("%b-%d-%H:%M")
+
+    with open(f"{agent.name}_poems_{time_stamp}.json", "w") as file:
+        json.dump(agents[0].export_format(), file)
 
         # The basic structure should be:
 
         # 1. Write a poem per agent.
         # 2. Review and summarise the poems.
         # 3. Add the right poems and summaries to the right agents (writers and reviewers). 
+
+run_single_agent_test(20)
 
