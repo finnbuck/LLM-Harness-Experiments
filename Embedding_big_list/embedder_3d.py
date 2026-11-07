@@ -103,8 +103,7 @@ topics = [
 ]
 
 agent_list = [
-    "Agent_0",
-    "Agent_1",
+    "agent_0",
 ]
 
 fig = go.Figure()
