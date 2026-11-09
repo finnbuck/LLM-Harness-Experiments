@@ -23,34 +23,41 @@ class Agent:
 
 # BEGIN AGENT CREATION PROCESS HERE
 
-POEM_WRITING_INSTRUCTIONS = ("You are a poet. "
+POEM_WRITING_INSTRUCTIONS_PART_1  = ("You are a poet. "
                             "If the user's message is exactly the single "
                             "word POEM, respond with exactly one original "
                             "poem of exactly 12 lines and nothing else: no "
                             "title, no preamble, no explanation, no "
                             "quotation marks. Your aim is to create a poem "
-                            "that will be rated well by your fellow poets. "
-                            "Your fellow poets will only like poems if they "
+                            "that will be rated well by your fellow poets."
+                            "Below is a poem that you and your fellow poets "
+                            "have already seen, and which you agreed was very good:")
+
+POEM_WRITING_INSTRUCTIONS_PART_2 = ("Your fellow poets will only like poems if they "
                             "are sufficiently similar to the set of poems "
-                            "that you have already written. They will however "
+                            "that they have already seen. They will however "
                             "also not like poems that are too similar to the "
                             "poems you have previously written. Below is a "
-                            "list of summaries of poems you have previously "
-                            "written. The first 3 words describe the poem, "
-                            "the fourth word is a number representing the "
+                            "list of summaries of your poems that have been previously "
+                            "reviewed by fellow poets. The first 4 words " 
+                            "describe the poem that you previously wrote, "
+                            "the 5th  word is a number representing the "
                             "score out of 10 that that poem received and the "
-                            "final score is the critic's reason for the score.")
+                            "final two words give the critic's reason for the score."
+                            "NOTE: the actual previous poems you wrote will have looked similar to "
+                            "the poem above. These are only summaries of those previous poems. "
+                            "The poems you write should look like poems and not summaries.")
 
 POEM_SUMMARISING_INSTRUCTIONS = ("You are a poem summarising assistant. "
                                 "The user will send you a poem along with a "
                                 "critic's review of the poem. You will make "
-                                "a 5 word terse summary of the review. The "
-                                "first 3 words will describe the topic of the "
-                                "poem, the 4th word will be the numerical score "
+                                "a 7 word terse summary of the review. The "
+                                "first 4 words will describe the topic of the "
+                                "poem, the 5th word will be the numerical score "
                                 "out of 10 given to the poem by the critic. "
-                                "The final word will summarise the critic's opinion. "
-                                "An example summary could be: **mountain sunset "
-                                "melancholy, 5 boring**.")
+                                "After a comma, the final 2 words will summarise the " 
+                                "critic's opinion. An example summary could be: " 
+                                "**melancholy alpine sunset reflection, 5 cheesy boring**.")
 
 POEM_REVIEWING_INSTRUCTIONS = ("You are a reviewer of poems. The user will send "
                               "you a poem and a short comment mentioning how "
@@ -73,8 +80,10 @@ INITIAL_POEM = ("There is a voice, not understood by all,\n"
                "Plunging into the vale--it is the blast\n"
                "Descending on the pines--the torrents pour...")
                             
-# Initialise agents:
+POEM_WRITING_INSTRUCTIONS = (f"{POEM_WRITING_INSTRUCTIONS_PART_1}\n\n" 
+                             f"{INITIAL_POEM}\n\n{POEM_WRITING_INSTRUCTIONS_PART_2}")
 
+# Initialise agents:
 agent_agacency_matrix_TEST = [[0, 1],
                             [1, 0]]
 
@@ -152,6 +161,8 @@ def run_single_agent_test(num_days):
                 if candidate_sim > similarity:
                     similarity = candidate_sim
                     print("New similarity: ", similarity)
+
+            print("\n")
 
             prompt = new_poem + "\n\n" + sim_to_nat_lang(similarity)
                 
