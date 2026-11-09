@@ -15,7 +15,7 @@ class Agent:
         export = []
         for poem in self.poem_list:
             export.append(
-                    {"lines": poem.join("\n"), # TEST WHEN LAB MACHINES UP AGAIN
+                    {"lines": poem.split("\n"), # TEST WHEN LAB MACHINES UP AGAIN
                      "topic": self.name
                     })
 

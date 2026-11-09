@@ -47,9 +47,7 @@ poems = dataset_poems + agent0_poems
 for poem in poems:
     print(poem)
 
-just_lines = ["\n".join(poem["lines"]) for poem in dataset_poems]
-
-just_lines += [poem["lines"] for poem in agent0_poems]
+just_lines = ["\n".join(poem["lines"]) for poem in poems]
 
 embeddings = model.encode(just_lines, prompt=instruction_prompt)
 
