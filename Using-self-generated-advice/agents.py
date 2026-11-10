@@ -219,5 +219,5 @@ agents = [0] * NUM_AGENTS
 for i in range(NUM_AGENTS):
     agents[i] = Agent(f"agent_{i}")
 
-run_single_agent_test(20, agents)
+run_single_agent_test(60, agents)
 
