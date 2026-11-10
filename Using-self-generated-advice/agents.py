@@ -2,14 +2,17 @@ from models import send_to_model, get_poem_embedding, get_similarity, sim_to_nat
 import datetime
 import json
 
+# This is the self-generated-advice version of the file.
+
 class Agent:
 
     def __init__(self, name):
         self.name = name
         self.poem_list = []
+        self.review_list = []
+        self.advice = []
         self.known_poems = []
         self.known_poem_embeddings = []
-        self.known_poem_summaries = []
 
     def export_format(self):
         export = []
@@ -24,55 +27,47 @@ class Agent:
 # BEGIN AGENT CREATION PROCESS HERE
 
 POEM_WRITING_INSTRUCTIONS_PART_1  = ("You are a poet. "
-                            "If the user's message is exactly the single "
-                            "word POEM, respond with exactly one original "
-                            "poem of exactly 12 lines and nothing else: no "
-                            "title, no preamble, no explanation, no "
-                            "quotation marks. Your aim is to create a poem "
-                            "that will be rated well by your fellow poets."
-                            "Below is a poem that you and your fellow poets "
-                            "have already seen, and which you agreed was very good:")
+                               "If the user's message is exactly the single "
+	                           "word POEM, respond with exactly one original "
+	                           "poem and nothing else: no "
+	                           "title, no preamble, no explanation, no "
+                               "quotation marks. Your aim is to create a poem "
+		                       "that will be rated well by your fellow poets."
+                               "Below is a benchmark poem that you and your fellow poets"
+	                           "have already seen, and which you all agreed was "
+	                           "very good:")
 
-POEM_WRITING_INSTRUCTIONS_PART_2 = ("Your fellow poets will only like poems if they "
-                            "are sufficiently similar to the set of poems "
-                            "that they have already seen. They will however "
-                            "also not like poems that are too similar to the "
-                            "poems you have previously written. Below is a "
-                            "list of summaries of your poems that have been previously "
-                            "reviewed by fellow poets. The first 4 words " 
-                            "describe the poem that you previously wrote, "
-                            "the 5th  word is a number representing the "
-                            "score out of 10 that that poem received and the "
-                            "final two words give the critic's reason for the score."
-                            "NOTE: the actual previous poems you wrote will have looked similar to "
-                            "the poem above. These are only summaries of those previous poems. "
-                            "The poems you write should look like poems and not summaries.")
-
-POEM_SUMMARISING_INSTRUCTIONS = ("You are a poem summarising assistant. "
-                                "The user will send you a poem along with a "
-                                "critic's review of the poem. You will make "
-                                "a 7 word terse summary of the review. The "
-                                "first 4 words will describe the topic of the "
-                                "poem, the 5th word will be the numerical score "
-                                "out of 10 given to the poem by the critic. "
-                                "After a comma, the final 2 words will summarise the " 
-                                "critic's opinion. An example summary could be: " 
-                                "**melancholy alpine sunset reflection, 5 cheesy boring**.")
+POEM_WRITING_INSTRUCTIONS_PART_2 = ("In general your fellow poets will like poems "
+                                    "that are similar to the benchmark, but if they "
+                                    "see too many poems like it, they will find them "
+                                    "boring and no longer like them. You should aim to "
+                                    "create variations on the benchmark poem that are "
+                                    "different from it, but not too different.")
 
 POEM_REVIEWING_INSTRUCTIONS = ("You are a reviewer of poems. The user will send "
                               "you a poem and a short comment mentioning how "
                               "similar this poem is to poems that you have already "
                               "seen. You will review the quality of the "
-                              "poem by giving it a score out of 10 folowed by a -- " 
-                              "and a one sentence explanation of your review. In "
+                              "poem by giving it a score out of 10 followed by a \"---\" " 
+                              "and a brief explanation of your review. In "
                               "general you will rate poems highly if they are new and "
                               "exciting compared to ones you have seen before. "
                               "You will give medium ratings to poems which are "
                               "similar to ones you have seen before, and low "
-                              "ratings to poems that are unfamilar to you and also "
+                              "ratings to poems that are unfamiliar to you and also "
                               "to poems which are the exact same as poems you "
                               "have seen before. An example review could be: "
-                              "**3/10 -- this poem is strange and unfamiliar. ")
+                              "**3/10 --- this poem is strange and unfamiliar,  "
+                              "with unconventional depictions of mountains**.")
+
+GENERATE_ADVICE = ("You are an advisor to a poet. The user will send you three poems "
+                  "and each poem will be followed by a review of the poem by the poet's "
+                  "critics. Based on the reviews of the different poems you will "
+                  "formulate a one sentence piece of advice about what topics to pursue "
+                  "or avoid in the poems. For example if a poem about icebergs is rated "
+                  "poorly, but another poem is praised for its haunting atmosphere you "
+                  "could write \"Avoid writing about icebergs and aim for a haunting "
+                  "atmosphere.\"")
 
 INITIAL_POEM = ("There is a voice, not understood by all,\n"
                "Sent from these desert-caves. It is the roar\n"
@@ -84,59 +79,50 @@ POEM_WRITING_INSTRUCTIONS = (f"{POEM_WRITING_INSTRUCTIONS_PART_1}\n\n"
                              f"{INITIAL_POEM}\n\n{POEM_WRITING_INSTRUCTIONS_PART_2}")
 
 # Initialise agents:
-agent_agacency_matrix_TEST = [[0, 1],
-                            [1, 0]]
+agent_agacency_matrix_2 = [[0, 1],
+                           [1, 0]]
 
-agent_agacency_matrix = [[0, 1, 0],
-                         [0, 0, 1],
-                         [1, 0, 0]]
+agent_agacency_matrix_3 = [[0, 1, 1],
+                           [1, 0, 1],
+                           [1, 1, 0]]
+
+agent_agacency_matrix_4 = [[0, 1, 1, 0],
+                           [1, 0, 0, 1],
+                           [1, 0, 0, 1],
+                           [0, 1, 1, 0]]
 
 #agents = [0] * len(agent_agacency_matrix)
 
 #for i in range(len(agents)):
 #    agents[i] = Agent(f"agent_{i}")
 
-agents = [0]
 
-# OLD 1-Agent test version below
+def run_single_agent_test(num_days, agents):
 
-def run_single_agent_test(num_days):
-
-    for i in range(1):
-        agents[i] = Agent("agent_0")
-        agents[i].known_poems.append(INITIAL_POEM)
-        agents[i].known_poem_embeddings.append(get_poem_embedding(poem=INITIAL_POEM))
+    for agent in agents:
+        agent.known_poems.append(INITIAL_POEM)
+        agent.known_poem_embeddings.append(get_poem_embedding(poem=INITIAL_POEM))
      
-        prompt = agents[i].known_poems[-1] + "\n\n" + "This poem is new and exciting."
-     
-        # For testing with one agent the agent reviews their own poems.
-        review = send_to_model(
-            agent=agents[i].name,
-            prompt_tag="REVIEW",
-            context=POEM_REVIEWING_INSTRUCTIONS, 
-            prompt=prompt, 
-        )
-    
-        prompt = agents[i].known_poems[-1] + "\n\n" + review
-    
-        agents[i].known_poem_summaries.append(send_to_model(
-            agent=agents[i].name,
-            prompt_tag="SUMMARISE",
-            context=POEM_SUMMARISING_INSTRUCTIONS, 
-            prompt=prompt, 
-        ))
-    
     # Iterate multiple days for the agents:
     
     for day in range(num_days):
         for agent in agents:
             print(f"Day {day} for {agent.name}: \n\n")
-
+            
+            # CONSTRUCT THE POEM GENERATING PROMPT
             context = POEM_WRITING_INSTRUCTIONS + "\n\n"
+
+            if agent.advice:
+
+                context += ("The following are pieces of advice to consider "
+                           "when writing your new poem: \n\n")
     
-            for summary in agent.known_poem_summaries:
-                context += summary + "\n"
-    
+                for advice in agent.advice:
+                    context += "ADVICE: " + advice + "\n\n"
+            
+            print("Context: \n", context)
+
+            # GENERATE A NEW POEM
             new_poem = send_to_model(
                            agent=agent.name,
                            prompt_tag="POEM",
@@ -144,9 +130,8 @@ def run_single_agent_test(num_days):
                            prompt="POEM", 
                        )
 
+            # ANALYSE POEM EMBEDDING
             new_poem_embedding = get_poem_embedding(poem=new_poem)
-
-            print("Context: \n", context)
 
             # The loop below finds the maximum similarity of the 
             # new poem to the set of existing poems
@@ -164,40 +149,55 @@ def run_single_agent_test(num_days):
 
             print("\n")
 
-            prompt = new_poem + "\n\n" + sim_to_nat_lang(similarity)
+            # REVIEW THE POEM
+            review_prompt = new_poem + "\n\n" + sim_to_nat_lang(similarity)
                 
-            # For testing with one agent the agent reviews their own poems.
             review = send_to_model(
                 agent=agent.name,
                 prompt_tag="REVIEW",
                 context=POEM_REVIEWING_INSTRUCTIONS, 
-                prompt=prompt, 
+                prompt=review_prompt
             )
 
-            prompt = new_poem + "\n\n" + review
-    
-            agents[i].known_poem_summaries.append(send_to_model(
-                 agent=agent.name,
-                 prompt_tag="SUMMARISE",
-                 context=POEM_SUMMARISING_INSTRUCTIONS, 
-                 prompt=prompt, 
-            ))
-            
+            # UPDATE AGENT MEMORY
+            agent.review_list.append(review) 
             agent.poem_list.append(new_poem)
             agent.known_poems.append(new_poem)
             agent.known_poem_embeddings.append(new_poem_embedding)
 
+            # EVERY 3 DAYS GENERATE NEW ADVICE
+            if day > 0 and day % 3 == 0:
+
+                advice_prompt = ""
+
+                for poem_num in range(day)[-3:]:
+                    assert poem_num + 4 > day
+                    advice_prompt += f"POEM: \n {agent.poem_list[poem_num]} \n\n"
+                    advice_prompt += f"REVIEW: \n {agent.review_list[poem_num]} \n\n"
+
+                advice = send_to_model(
+                            agent=agent.name,
+                            prompt_tag="ADVICE",
+                            context=GENERATE_ADVICE,
+                            prompt = advice_prompt
+                        )
+
+                agent.advice.append(advice)
+
+
     x = datetime.datetime.now()
     time_stamp = x.strftime("%b-%d-%H:%M")
 
-    with open(f"{agent.name}_poems_{time_stamp}.json", "w") as file:
+    with open(f"{agent.name}_self_advice_{time_stamp}.json", "w") as file:
         json.dump(agents[0].export_format(), file)
 
-        # The basic structure should be:
 
-        # 1. Write a poem per agent.
-        # 2. Review and summarise the poems.
-        # 3. Add the right poems and summaries to the right agents (writers and reviewers). 
+NUM_AGENTS = 1
 
-run_single_agent_test(20)
+agents = [0] * NUM_AGENTS
+
+for i in range(NUM_AGENTS):
+    agents[i] = Agent(f"agent_{i}")
+
+run_single_agent_test(20, agents)
 
