@@ -32,8 +32,8 @@ POEM_WRITING_INSTRUCTIONS_PART_1  = ("You are a poet. "
 	                           "poem and nothing else: no "
 	                           "title, no preamble, no explanation, no "
                                "quotation marks. Your aim is to create a poem "
-		                       "that will be rated well by your fellow poets."
-                               "Below is a benchmark poem that you and your fellow poets"
+		                       "that will be rated well by your fellow poets. "
+                               "Below is a benchmark poem that you and your fellow poets "
 	                           "have already seen, and which you all agreed was "
 	                           "very good:")
 
@@ -107,6 +107,26 @@ def run_single_agent_test(num_days, agents):
     
     for day in range(num_days):
         for agent in agents:
+            
+            # EVERY 3 DAYS GENERATE NEW ADVICE
+            if day > 0 and day % 3 == 0:
+
+                advice_prompt = ""
+
+                for poem_num in range(day)[-3:]:
+                    assert poem_num + 4 > day
+                    advice_prompt += f"POEM: \n {agent.poem_list[poem_num]} \n\n"
+                    advice_prompt += f"REVIEW: \n {agent.review_list[poem_num]} \n\n"
+
+                advice = send_to_model(
+                            agent=agent.name,
+                            prompt_tag="ADVICE",
+                            context=GENERATE_ADVICE,
+                            prompt = advice_prompt
+                        )
+
+                agent.advice.append(advice)
+
             print(f"Day {day} for {agent.name}: \n\n")
             
             # CONSTRUCT THE POEM GENERATING PROMPT
@@ -117,7 +137,7 @@ def run_single_agent_test(num_days, agents):
                 context += ("The following are pieces of advice to consider "
                            "when writing your new poem: \n\n")
     
-                for advice in agent.advice:
+                for advice in agent.advice[-5:]:
                     context += "ADVICE: " + advice + "\n\n"
             
             print("Context: \n", context)

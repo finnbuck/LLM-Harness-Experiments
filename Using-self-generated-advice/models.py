@@ -108,9 +108,9 @@ def sim_to_nat_lang(similarity):
         return "This poem is the same as one you have seen before."
     elif similarity > 0.95:
         return "This poem is very similar to ones you have seen before."
-    elif similarity > 0.90:
+    elif similarity > 0.87:
         return "This poem is similar to ones you have seen before."
-    elif similarity > 0.85:
+    elif similarity > 0.83:
         return "This poem is new and exciting."
     elif similarity > 0.75:
         return "This poem is strange and unfamiliar."
