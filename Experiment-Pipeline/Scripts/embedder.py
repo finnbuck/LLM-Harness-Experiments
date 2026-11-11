@@ -20,13 +20,10 @@ def embed_combined_poems_list(dataset_location):
     with open("4-16_line_poems_with_topics.json", mode="r", encoding="UTF-8") as poem_file:
         dataset_poems = json.load(poem_file)
     
-    with open(dataset_location) as file:
+    with open(dataset_location, mode="r", encoding="UTF-8") as file:
         agent0_poems = json.load(file)
     
     poems = dataset_poems + agent0_poems
-    
-    for poem in poems:
-        print(poem)
     
     just_lines = ["\n".join(poem["lines"]) for poem in poems]
     
@@ -77,7 +74,7 @@ def create_embedding_plot_2D(dataset_location, topics, agent_name_list):
             x=[Xr[:, 0][i] for i in topic_i], 
             y=[Xr[:, 1][i] for i in topic_i],
             mode="markers",
-            marker=dict(color=colors[color_count], size=3),
+            marker=dict(color=colors[color_count], size=8),
             hovertext= [html_format_poems[i] for i in topic_i],
             hoverinfo="text",
             name=topic,
@@ -90,7 +87,7 @@ def create_embedding_plot_2D(dataset_location, topics, agent_name_list):
             x=[Xr[:, 0][i] for i in agent_i], 
             y=[Xr[:, 1][i] for i in agent_i], 
             mode="lines+markers",
-            marker=dict(color=colors[color_count], size=4),
+            marker=dict(color=colors[color_count], size=10),
             line=dict(color=colors[color_count]),
             hovertext= [html_format_poems[i] for i in agent_i],
             hoverinfo="text",

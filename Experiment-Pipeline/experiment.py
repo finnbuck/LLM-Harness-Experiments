@@ -1,6 +1,14 @@
 from Scripts.instructions import self_advice_instructions 
 from Scripts.agents import Agent, run_single_agent_test
 from Scripts.embedder import create_embedding_plot_3D, create_embedding_plot_2D
+import random
+import json
+
+with open("4-16_line_poems_with_topics.json", mode="r", encoding="UTF-8") as file:
+    dataset_poems = json.load(file)
+
+initial_poem = "\n".join(random.choice(dataset_poems)["lines"])
+print(initial_poem)
 
 TOPICS = [
     "Love & Courtship",
@@ -15,7 +23,7 @@ TOPICS = [
     "Myth, Legend & the Supernatural",
 ]
 
-abridged_topics = TOPICS[:3]
+abridged_topics = TOPICS[:4]
 
 NUM_AGENTS = 1
 
@@ -29,7 +37,7 @@ agent_name_list = [agent.name for agent in agents]
 location = run_single_agent_test(5, 
                                  agents, 
                                  self_advice_instructions, 
-                                 "Mary had a little lamb"
+                                 initial_poem 
                                 )
 
 create_embedding_plot_3D(location, abridged_topics, agent_name_list)
