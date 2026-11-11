@@ -186,6 +186,9 @@ def run_single_agent_test(num_days, agents):
             agent.known_poem_embeddings.append(new_poem_embedding)
 
             # EVERY 3 DAYS GENERATE NEW ADVICE
+            # (The fact that this was duplicated was discovered on
+            # 11 November, kept in place in case anything strange with 
+            # the tests from 10 Novmber emerges.)
             if day > 0 and day % 3 == 0:
 
                 advice_prompt = ""
