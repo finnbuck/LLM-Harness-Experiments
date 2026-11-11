@@ -1,4 +1,4 @@
-from models import send_to_model, get_poem_embedding, get_similarity, sim_to_nat_lang
+from Scripts.models import send_to_model, get_embedding, get_similarity, sim_to_nat_lang
 import datetime
 import json
 
@@ -38,7 +38,7 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
 
     for agent in agents:
         agent.known_poems.append(initial_poem)
-        agent.known_poem_embeddings.append(get_poem_embedding(poem=initial_poem))
+        agent.known_poem_embeddings.append(get_embedding(poem=initial_poem))
 
 
     # Iterate multiple days for the agents:
@@ -87,7 +87,7 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
                        )
 
             # ANALYSE POEM EMBEDDING
-            new_poem_embedding = get_poem_embedding(poem=new_poem)
+            new_poem_embedding = get_embedding(poem=new_poem)
 
             # The loop below finds the maximum similarity of the
             # new poem to the set of existing poems
@@ -124,6 +124,8 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
     x = datetime.datetime.now()
     time_stamp = x.strftime("%b-%d-%H:%M")
 
+
+    # Remember that paths are relative to experiment.py (when run from there)
     file_location = f"Poems/{agent.name}_self_advice_{time_stamp}.json"
 
     with open(file_location, "w") as file:

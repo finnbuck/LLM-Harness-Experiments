@@ -84,12 +84,12 @@ def make_instruction_prompt(task_description):
 # The method below is based on the functionality demonstrated in
 # https://huggingface.co/Qwen/Qwen3-Embedding-0.6B
 
-def get_poem_embedding(**kwargs):
+def get_embedding(**kwargs):
     for k, v in kwargs.items():
         if k == "poem":
             poem = v
         else:
-            print("embed_poem does not regognise the kwarg ", k)
+            print("embed_poem does not recognise the kwarg ", k)
     
     embedding_instruction_prompt = make_instruction_prompt(
         "Given a poem, return a poem with the same topic."

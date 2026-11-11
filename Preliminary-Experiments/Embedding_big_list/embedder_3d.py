@@ -55,8 +55,6 @@ print("Embeddings type", type(embeddings), embeddings.shape) # Result: Embedding
 
 # Test to see if the order of embeddings gets changed
 # The similarity is 0.999 or greater for each one so we can be sure the order was not changed between just_lines and embeddings
-# They are not perfectly similar because of padding added to the texts when embeddings are done in batches.
-# The aboce note on padding is based on a Claude response CHECK IT INDEPENDENTLY.
 # TEST SUCCESSFUL, can trust ordering.
 # for i in range(30):
 #     test_indice = random.randint(0, 400)
