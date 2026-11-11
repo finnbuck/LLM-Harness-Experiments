@@ -22,11 +22,23 @@ class Agent:
 
         return export
 
-def run_single_agent_test(num_days, agents):
+def run_single_agent_test(num_days, agents, instructions, initial_poem):
+
+    # Load in the instructions:
+    
+    POEM_WRITING_INSTRUCTIONS_PART_1 = instructions["poem_writing_part_1"]
+    POEM_WRITING_INSTRUCTIONS_PART_2 = instructions["poem_writing_part_2"]
+
+    POEM_WRITING_INSTRUCTIONS = (f"{POEM_WRITING_INSTRUCTIONS_PART_1}\n\n"
+                                 f"{initial_poem}\n\n"
+                                 f"{POEM_WRITING_INSTRUCTIONS_PART_2}")
+
+    POEM_REVIEWING_INSTRUCTIONS = instructions["poem_review"]
+    POEM_ADVICE_INSTRUCTIONS = instructions["poem_advice"]
 
     for agent in agents:
-        agent.known_poems.append(INITIAL_POEM)
-        agent.known_poem_embeddings.append(get_poem_embedding(poem=INITIAL_POEM))
+        agent.known_poems.append(initial_poem)
+        agent.known_poem_embeddings.append(get_poem_embedding(poem=initial_poem))
 
 
     # Iterate multiple days for the agents:
@@ -47,7 +59,7 @@ def run_single_agent_test(num_days, agents):
                 advice = send_to_model(
                             agent=agent.name,
                             prompt_tag="ADVICE",
-                            context=GENERATE_ADVICE,
+                            context=POEM_ADVICE_INSTRUCTIONS,
                             prompt = advice_prompt
                         )
 
@@ -112,8 +124,10 @@ def run_single_agent_test(num_days, agents):
     x = datetime.datetime.now()
     time_stamp = x.strftime("%b-%d-%H:%M")
 
-    with open(f"{agent.name}_self_advice_{time_stamp}.json", "w") as file:
+    file_location = f"Poems/{agent.name}_self_advice_{time_stamp}.json"
+
+    with open(file_location, "w") as file:
         json.dump(agents[0].export_format(), file)
 
-
+    return file_location
 

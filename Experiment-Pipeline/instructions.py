@@ -1,10 +1,8 @@
-self_advice_x_y_instructions = {
+self_advice_instructions = {
 
-        poem_writing_instructions_part_1 :
+        "poem_writing_part_1" :
 
-
-
-POEM_WRITING_INSTRUCTIONS_PART_1  = ("You are a poet. "
+                 ("You are a poet. "
                   "If the user's message is exactly the single "
                   "word POEM, respond with exactly one original "
                   "poem and nothing else: no "
@@ -13,16 +11,20 @@ POEM_WRITING_INSTRUCTIONS_PART_1  = ("You are a poet. "
                   "that will be rated well by your fellow poets. "
                   "Below is a benchmark poem that you and your fellow poets "
                   "have already seen, and which you all agreed was "
-                  "very good:")
+                  "very good:"),
 
-POEM_WRITING_INSTRUCTIONS_PART_2 = ("In general your fellow poets will "
+        "poem_writing_part_2" :
+
+                 ("In general your fellow poets will "
                   "like poems that are similar to the benchmark, but if they "
                   "see too many poems like it, they will find them "
                   "boring and no longer like them. You should aim to "
                   "create variations on the benchmark poem that are "
-                  "different from it, but not too different.")
+                  "different from it, but not too different."),
 
-POEM_REVIEWING_INSTRUCTIONS = ("You are a reviewer of poems. The user will "
+        "poem_review" :
+
+                 ("You are a reviewer of poems. The user will "
                   "send  you a poem and a short comment mentioning how "
                   "similar this poem is to poems that you have already "
                   "seen. You will review the quality of the "
@@ -36,9 +38,11 @@ POEM_REVIEWING_INSTRUCTIONS = ("You are a reviewer of poems. The user will "
                   "to poems which are the exact same as poems you "
                   "have seen before. An example review could be: "
                   "**3/10 --- this poem is strange and unfamiliar,  "
-                  "with unconventional depictions of mountains**.")
+                  "with unconventional depictions of mountains**."),
 
-GENERATE_ADVICE = ("You are an advisor to a poet. The user will send you three "
+        "poem_advice" :
+
+                 ("You are an advisor to a poet. The user will send you three "
                   "poems and each poem will be followed by a review of the "
                   "poem by the poet's critics. Based on the reviews of the "
                   "different poems you will formulate a one sentence piece of "
@@ -46,4 +50,5 @@ GENERATE_ADVICE = ("You are an advisor to a poet. The user will send you three "
                   "For example if a poem about x is rated poorly, but "
                   "another poem is praised for y you could write \"Avoid "
                   "writing about x and write more about y.\"")
+}
 
