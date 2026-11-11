@@ -34,7 +34,7 @@ for i in range(NUM_AGENTS):
 
 agent_name_list = [agent.name for agent in agents]
 
-location = run_single_agent_test(5, 
+location = run_single_agent_test(60, 
                                  agents, 
                                  self_advice_instructions, 
                                  initial_poem 
