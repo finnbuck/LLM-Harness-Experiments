@@ -117,7 +117,7 @@ def sim_to_nat_lang(similarity):
     elif similarity > 0.75:
         return "This poem is strange and unfamiliar."
     else:
-        return "This poem is unpleasant and unfamiliar."
+        return "This poem is so new that it is strange and unpleasant."
 
 ## TEST
 #poem_1 = send_to_model(

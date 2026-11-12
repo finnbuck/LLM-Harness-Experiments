@@ -47,7 +47,11 @@ agents = {agents[k - 1]: [agents[v - 1] for v in l]  for k, l in network.items()
 
 agent_name_list = [agent.name for agent in agents]
 
-location = run_single_agent_test(5, 
+# Run this once the GPU comes back on line and then delete the next two lines
+create_embedding_plot_3D("Poems/self_advice_Nov-12-22:40.json", abridged_topics, agent_name_list)
+sys.exit()
+
+location = run_single_agent_test(40, 
                                  agents, 
                                  topic_aware_advice_instructions, 
                                  initial_poem 

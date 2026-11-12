@@ -6,10 +6,11 @@ class Agent:
 
     def __init__(self, name):
         self.name = name
+        self.benchmark = ""
         self.poem_list = []
         self.reviews = {} # Dictionary of Day : [reviewlist pairs]
         self.advice = []
-        self.known_poems = []
+        self.known_poems = [] # Doesn't really serve a purpose currently
         self.known_poem_embeddings = []
 
     def export_format(self):
@@ -40,6 +41,7 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
 
         # All agents start off knowing the initial poem and also 
         # the embedding of the initial poem.
+        agent.benchmark = initial_poem
         agent.known_poems.append(initial_poem)
         agent.known_poem_embeddings.append(get_embedding(poem=initial_poem))
 
@@ -72,7 +74,12 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
                 agent.advice.append(advice)
 
             # CONSTRUCT THE POEM GENERATING PROMPT
-            context = POEM_WRITING_INSTRUCTIONS + "\n\n"
+            poem_writing_instructions = (
+                                 f"{POEM_WRITING_INSTRUCTIONS_PART_1}\n\n"
+                                 f"{agent.benchmark}\n\n"
+                                 f"{POEM_WRITING_INSTRUCTIONS_PART_2}"
+                                 )
+            context = poem_writing_instructions + "\n\n"
 
             if agent.advice:
 
@@ -124,7 +131,7 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
                     prompt=review_prompt
                 )
 
-                if int(review[2]) > 7 && int(review[2]) < 11:
+                if int(review[2]) > 7 and int(review[2]) < 11:
                     consensus += 1
                     
                 agent.reviews[day].append(review)
@@ -135,11 +142,8 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
 
             if consensus == len(agents[agent]):
                 print(f"All {len(agents[agent])} critics agree on this poem")
-                POEM_WRITING_INSTRUCTIONS = (
-                                 f"{POEM_WRITING_INSTRUCTIONS_PART_1}\n\n"
-                                 f"{new_poem}\n\n"
-                                 f"{POEM_WRITING_INSTRUCTIONS_PART_2}"
-                                 )
+                agent.benchmark = new_poem
+
             # UPDATE AGENT MEMORY
             agent.poem_list.append(new_poem)
             agent.known_poems.append(new_poem)
