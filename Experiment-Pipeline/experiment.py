@@ -1,14 +1,20 @@
 from Scripts.instructions import self_advice_instructions 
 from Scripts.agents import Agent, run_single_agent_test
 from Scripts.embedder import create_embedding_plot_3D, create_embedding_plot_2D
+from Scripts.networks import PAIR, TRIANGLE, SQUARE
 import random
 import json
+import sys
+
+# Picking a random poem as a starting point
 
 with open("4-16_line_poems_with_topics.json", mode="r", encoding="UTF-8") as file:
     dataset_poems = json.load(file)
 
 initial_poem = "\n".join(random.choice(dataset_poems)["lines"])
 print(initial_poem)
+
+# Picking which topics we want to appear in the final embedding.
 
 TOPICS = [
     "Love & Courtship",
@@ -25,9 +31,23 @@ TOPICS = [
 
 abridged_topics = TOPICS[:4]
 
-NUM_AGENTS = 1
+# Setting up the network of agent objects
 
-agents = [0] * NUM_AGENTS
+network = SQUARE
+
+agents = range(len(network))
+
+# The agents are numbered so that they match the numbers in the 
+# network notation in the networks.py file
+agents = [Agent(f"agent_{i + 1}") for i in agents]
+
+# Numbers in the network dict need to be replaced with 
+# their corresponding Agent objects
+agents = {agents[k - 1]: [agents[v - 1] for v in l]  for k, l in network.items()}
+
+print(agents)
+
+sys.exit()
 
 for i in range(NUM_AGENTS):
     agents[i] = Agent(f"agent_{i}")
