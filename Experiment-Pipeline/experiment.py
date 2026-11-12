@@ -1,4 +1,4 @@
-from Scripts.instructions import self_advice_instructions 
+from Scripts.instructions import self_advice_instructions, topic_aware_advice_instructions 
 from Scripts.agents import Agent, run_single_agent_test
 from Scripts.embedder import create_embedding_plot_3D, create_embedding_plot_2D
 from Scripts.networks import SELF_LOOP, PAIR, TRIANGLE, SQUARE
@@ -47,9 +47,9 @@ agents = {agents[k - 1]: [agents[v - 1] for v in l]  for k, l in network.items()
 
 agent_name_list = [agent.name for agent in agents]
 
-location = run_single_agent_test(40, 
+location = run_single_agent_test(5, 
                                  agents, 
-                                 self_advice_instructions, 
+                                 topic_aware_advice_instructions, 
                                  initial_poem 
                                 )
 

@@ -52,3 +52,59 @@ self_advice_instructions = {
                   "writing about x and write more about y.\"")
 }
 
+topic_aware_advice_instructions = {
+
+        "poem_writing_part_1" :
+
+                 ("You are a poet. "
+                  "If the user's message is exactly the single "
+                  "word POEM, respond with exactly one original "
+                  "poem and nothing else: no "
+                  "title, no preamble, no explanation, no "
+                  "quotation marks. Your aim is to create a poem "
+                  "that will be rated well by your fellow poets. "
+                  "Below is a benchmark poem that you and your fellow poets "
+                  "have already seen, and which you all agreed was "
+                  "very good:"),
+
+        "poem_writing_part_2" :
+
+                 ("In general, your fellow poets will "
+                  "like poems that have a similar topic to the benchmark, " 
+                  "but if they see too many poems with similar topics, "
+                  "they will find them boring and no longer like them. "
+                  "You should aim to create variations on the benchmark poem "
+                  "involve somwhat different topics, but not too different."),
+
+        "poem_review" :
+
+                 ("You are a reviewer of poems. The user will "
+                  "send  you a poem and a short comment mentioning how "
+                  "similar this poem is to poems that you have already "
+                  "seen. You will review the quality of the "
+                  "poem by giving it a score out of 10 followed by a \"---\" "
+                  "and a brief explanation of your review. In "
+                  "general you will rate poems highly if they are new and "
+                  "exciting compared to ones you have seen before, "
+                  "but not so new that they seem strange and unfamiliar. "
+                  "You will give medium ratings to poems which are "
+                  "similar to ones you have seen before, and low "
+                  "ratings to poems that are unfamiliar to you and also "
+                  "to poems which are the exact same as poems you "
+                  "have seen before. An example review could be: "
+                  "**3/10 --- this poem is strange and unfamiliar,  "
+                  "with confusing and difficult subject matter.**."),
+
+        "poem_advice" :
+
+                 ("You are an advisor to a poet. The user will send you three "
+                  "poems and each poem will be followed by a review of the "
+                  "poem by the poet's critics. Based on the reviews of the "
+                  "different poems you will formulate a one sentence piece of "
+                  "advice about what topics to pursue or avoid in the poems."
+                  "For example if a poem about x is rated poorly, but "
+                  "another poem is praised for y you could write \"Avoid "
+                  "writing about x and write more about y.\"\n"
+                  "Keep your advice general and avoid referring to specific "
+                  "poems or reviews as the poet will only see the advice.")
+}

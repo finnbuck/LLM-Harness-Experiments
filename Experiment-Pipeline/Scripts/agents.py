@@ -79,7 +79,7 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
                 context += ("The following are pieces of advice to consider "
                            "when writing your new poem: \n\n")
 
-                for advice in agent.advice[-5:]:
+                for advice in agent.advice[-3:]:
                     context += "ADVICE: " + advice + "\n\n"
 
             print("Context: \n", context)
@@ -95,6 +95,7 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
             new_poem_embedding = get_embedding(poem=new_poem)
             agent.reviews[day] = []
 
+            consensus = 0
             for critic in agents[agent]:
 
                 # ANALYSE POEM EMBEDDING
@@ -123,12 +124,22 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
                     prompt=review_prompt
                 )
 
+                if int(review[2]) > 7 && int(review[2]) < 11:
+                    consensus += 1
+                    
                 agent.reviews[day].append(review)
 
                 if not (critic is agent):
                     critic.known_poems.append(new_poem)
                     critic.known_poem_embeddings.append(new_poem_embedding)
 
+            if consensus == len(agents[agent]):
+                print(f"All {len(agents[agent])} critics agree on this poem")
+                POEM_WRITING_INSTRUCTIONS = (
+                                 f"{POEM_WRITING_INSTRUCTIONS_PART_1}\n\n"
+                                 f"{new_poem}\n\n"
+                                 f"{POEM_WRITING_INSTRUCTIONS_PART_2}"
+                                 )
             # UPDATE AGENT MEMORY
             agent.poem_list.append(new_poem)
             agent.known_poems.append(new_poem)
