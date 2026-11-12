@@ -7,7 +7,7 @@ class Agent:
     def __init__(self, name):
         self.name = name
         self.poem_list = []
-        self.review_list = []
+        self.reviews = {} # Dictionary of Day : [reviewlist pairs]
         self.advice = []
         self.known_poems = []
         self.known_poem_embeddings = []
@@ -37,6 +37,9 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
     POEM_ADVICE_INSTRUCTIONS = instructions["poem_advice"]
 
     for agent in agents:
+
+        # All agents start off knowing the initial poem and also 
+        # the embedding of the initial poem.
         agent.known_poems.append(initial_poem)
         agent.known_poem_embeddings.append(get_embedding(poem=initial_poem))
 
@@ -44,7 +47,7 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
     # Iterate multiple days for the agents:
 
     for day in range(num_days):
-        for agent in agents:
+        for agent in agents.keys():
 
             # EVERY 3 DAYS GENERATE NEW ADVICE
             if day > 0 and day % 3 == 0:
@@ -86,44 +89,59 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
                            prompt="POEM",
                        )
 
-            # ANALYSE POEM EMBEDDING
             new_poem_embedding = get_embedding(poem=new_poem)
+            agent.reviews[day] = []
 
+            # Functionality that needs to be added:
+            # 1. Reviews are sent to all neighbours. 
+            # 2. In practice this means that the "known"
+            # poems of the neighbours needs to be updated.
+            # 3. It also means that the similarity finding loop 
+            # needs to be done for each neighbour.
             # The loop below finds the maximum similarity of the
             # new poem to the set of existing poems
-            similarity = 0
-            for old_embedding in agent.known_poem_embeddings:
 
-                candidate_sim = get_similarity(
-                                    new_poem_embedding,
-                                    old_embedding
-                                )
+            for critic in agents[agent]:
 
-                if candidate_sim > similarity:
-                    similarity = candidate_sim
-                    print("New similarity: ", similarity)
+                # ANALYSE POEM EMBEDDING
+                similarity = 0
 
-            print("\n")
+                for old_embedding in critic.known_poem_embeddings:
 
-            # REVIEW THE POEM
-            review_prompt = new_poem + "\n\n" + sim_to_nat_lang(similarity)
+                    candidate_sim = get_similarity(
+                                        new_poem_embedding,
+                                        old_embedding
+                                    )
 
-            review = send_to_model(
-                agent=agent.name,
-                prompt_tag="REVIEW",
-                context=POEM_REVIEWING_INSTRUCTIONS,
-                prompt=review_prompt
-            )
+                    if candidate_sim > similarity:
+                        similarity = candidate_sim
+                        print("New similarity: ", similarity)
+
+                print("\n")
+
+                # REVIEW THE POEM
+                review_prompt = new_poem + "\n\n" + sim_to_nat_lang(similarity)
+
+                review = send_to_model(
+                    agent=agent.name,
+                    prompt_tag="REVIEW",
+                    context=POEM_REVIEWING_INSTRUCTIONS,
+                    prompt=review_prompt
+                )
+
+                agent.reviews[day].append(review)
+
+                if not (critic is agent):
+                    critic.known_poems.append(new_poem)
+                    critic.known_poem_embeddings.append(new_poem_embedding)
 
             # UPDATE AGENT MEMORY
-            agent.review_list.append(review)
             agent.poem_list.append(new_poem)
             agent.known_poems.append(new_poem)
             agent.known_poem_embeddings.append(new_poem_embedding)
 
     x = datetime.datetime.now()
     time_stamp = x.strftime("%b-%d-%H:%M")
-
 
     # Remember that paths are relative to experiment.py (when run from there)
     file_location = f"Poems/{agent.name}_self_advice_{time_stamp}.json"
