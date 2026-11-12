@@ -1,7 +1,7 @@
 from Scripts.instructions import self_advice_instructions 
 from Scripts.agents import Agent, run_single_agent_test
 from Scripts.embedder import create_embedding_plot_3D, create_embedding_plot_2D
-from Scripts.networks import PAIR, TRIANGLE, SQUARE
+from Scripts.networks import SELF_LOOP, PAIR, TRIANGLE, SQUARE
 import random
 import json
 import sys
@@ -45,20 +45,13 @@ agents = [Agent(f"agent_{i + 1}") for i in agents]
 # their corresponding Agent objects
 agents = {agents[k - 1]: [agents[v - 1] for v in l]  for k, l in network.items()}
 
-print(agents)
-
-sys.exit()
-
-for i in range(NUM_AGENTS):
-    agents[i] = Agent(f"agent_{i}")
-
 agent_name_list = [agent.name for agent in agents]
 
-location = run_single_agent_test(60, 
+location = run_single_agent_test(40, 
                                  agents, 
                                  self_advice_instructions, 
                                  initial_poem 
                                 )
 
 create_embedding_plot_3D(location, abridged_topics, agent_name_list)
-create_embedding_plot_2D(location, abridged_topics, agent_name_list)
+# create_embedding_plot_2D(location, abridged_topics, agent_name_list)

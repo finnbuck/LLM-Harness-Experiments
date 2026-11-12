@@ -56,8 +56,11 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
 
                 for poem_num in range(day)[-3:]:
                     assert poem_num + 4 > day
-                    advice_prompt += f"POEM: \n {agent.poem_list[poem_num]} \n\n"
-                    advice_prompt += f"REVIEW: \n {agent.review_list[poem_num]} \n\n"
+                    advice_prompt += f"POEM:\n{agent.poem_list[poem_num]}\n\n"
+
+                    for i in range(3):
+                        for review in agent.reviews[day - 1 - i]:
+                            advice_prompt += f"REVIEW:\n{review}\n\n"
 
                 advice = send_to_model(
                             agent=agent.name,
@@ -92,15 +95,6 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
             new_poem_embedding = get_embedding(poem=new_poem)
             agent.reviews[day] = []
 
-            # Functionality that needs to be added:
-            # 1. Reviews are sent to all neighbours. 
-            # 2. In practice this means that the "known"
-            # poems of the neighbours needs to be updated.
-            # 3. It also means that the similarity finding loop 
-            # needs to be done for each neighbour.
-            # The loop below finds the maximum similarity of the
-            # new poem to the set of existing poems
-
             for critic in agents[agent]:
 
                 # ANALYSE POEM EMBEDDING
@@ -123,7 +117,7 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
                 review_prompt = new_poem + "\n\n" + sim_to_nat_lang(similarity)
 
                 review = send_to_model(
-                    agent=agent.name,
+                    agent=critic.name,
                     prompt_tag="REVIEW",
                     context=POEM_REVIEWING_INSTRUCTIONS,
                     prompt=review_prompt
@@ -144,10 +138,14 @@ def run_single_agent_test(num_days, agents, instructions, initial_poem):
     time_stamp = x.strftime("%b-%d-%H:%M")
 
     # Remember that paths are relative to experiment.py (when run from there)
-    file_location = f"Poems/{agent.name}_self_advice_{time_stamp}.json"
+    file_location = f"Poems/self_advice_{time_stamp}.json"
+
+    combined_export_list = []
+    for agent in agents.keys():
+        combined_export_list += (agent.export_format())
 
     with open(file_location, "w") as file:
-        json.dump(agents[0].export_format(), file)
+        json.dump(combined_export_list, file)
 
     return file_location
 
