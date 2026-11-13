@@ -19,6 +19,7 @@ def embed_combined_poems_list(dataset_location):
     
     with open("4-16_line_poems_with_topics.json", mode="r", encoding="UTF-8") as poem_file:
         dataset_poems = json.load(poem_file)
+        dataset_poems = dataset_poems[:500] # Temporary, delete this after fixing the issue.
     
     with open(dataset_location, mode="r", encoding="UTF-8") as file:
         agent0_poems = json.load(file)
@@ -26,6 +27,9 @@ def embed_combined_poems_list(dataset_location):
     poems = dataset_poems + agent0_poems
     
     just_lines = ["\n".join(poem["lines"]) for poem in poems]
+
+    print(len(just_lines))
+    print(just_lines)
     
     embeddings = get_embedding(poem=just_lines) 
     
